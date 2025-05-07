@@ -18,8 +18,11 @@ def pair_and_trust(mac):
     bt.sendline("trust {mac}")
     bt.expect("#")
     bt.sendline(f"connect {mac}")
-    bt.expect("#")
+    bt.expect("#", timeout=5)
+    bt.sendline(f"disconnect {mac}")
+    bt.expect("#", timeout=5)
     bt.sendline("exit")
+    bt.close()
 
     print(f"\n---   Pairing and trusting {mac} complete.   ---")
     
