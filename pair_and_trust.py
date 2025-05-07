@@ -20,7 +20,7 @@ def pair_and_trust(mac):
     bt.expect("#")
     bt.sendline(f"connect {mac}")
     bt.expect("#", timeout=5)
-    time.sleep(7)
+    time.sleep(5)
     bt.sendline(f"disconnect {mac}")
     bt.expect("#", timeout=5)
     bt.sendline("exit")
