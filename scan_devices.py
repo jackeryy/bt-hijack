@@ -5,7 +5,7 @@ import re
 def strip_ansi(text):
     return re.sub(r'\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])', '', text)
 
-def scan_bluetooth_devices(timeout=10):
+def scan_bluetooth_devices(timeout=20):
     print("---    Scanning for nearby Bluetooth devices    ---")
 
     scan = pexpect.spawn("bluetoothctl", encoding='utf-8', timeout=timeout)
@@ -24,16 +24,16 @@ def scan_bluetooth_devices(timeout=10):
         while time.time() - start < timeout:
             line = scan.readline().strip()
             line = strip_ansi(line)
-            print(f'Line - {repr(line)}')
             match = re.search(r"Device ([\w:]+) (.+)", line)
             if match:
                 mac, name = match.groups()
                 if mac not in found:
                     found[mac] = name
-                    print(f"{mac} - {name}")
+                    print(f"FOUND - {mac} - {name}")
     except pexpect.exceptions.TIMEOUT:
         pass
     finally:
+        scan.expect("#")
         scan.sendline("scan off")
         scan.close()
 
@@ -48,7 +48,7 @@ def choose_device(devices):
     return list(devices.keys())[choice]
 
 if __name__ == "__main__":
-    devices = scan_bluetooth_devices(timeout=10)
+    devices = scan_bluetooth_devices(timeout=20)
     if not devices:
         print("No devices found.")
     else:
