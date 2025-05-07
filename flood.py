@@ -26,7 +26,7 @@ def flood_connect(mac, attempts=50, delay=0.5):
         except Exception as e:
             print(f"Attempt {i+1} failed: {e}")
 
-        time.sleep(delay)  # Small pause between attempts
+        time.sleep(delay) 
 
     flood.sendline("exit")
     flood.close()
