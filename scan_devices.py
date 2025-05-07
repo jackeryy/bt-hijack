@@ -20,7 +20,7 @@ def scan_bluetooth_devices(timeout=10):
     try:
         while time.time() - start < timeout:
             line = scan.readline().strip()
-            print(f'Line - {line}')
+            print(f'Line - {repr(line)}')
             match = re.search(r"\[NEW\] Device ([\w:]+) (.+)", line)
             if match:
                 mac, name = match.groups()
