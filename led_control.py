@@ -11,8 +11,10 @@ OFF_COMMAND = bytearray([0xCC, 0x24, 0x33])
 
 async def main():
     async with BleakClient(ADDRESS) as client:
-        print("Connected:", await client.is_connected())
-        await client.write_gatt_char(CHAR_UUID, ON_COMMAND)  # or RED_COMMAND
-        print("Command sent")
+        services = await client.get_services()
+        for service in services:
+            print(f"Service: {service.uuid}")
+            for char in service.characteristics:
+                print(f"  Characteristic: {char.uuid} - {char.properties}")
 
 asyncio.run(main())
