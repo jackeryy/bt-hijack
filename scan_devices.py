@@ -3,9 +3,10 @@ import time
 import re
 
 def scan_bluetooth_devices(timeout=10):
-    print("[*] Scanning for nearby Bluetooth devices")
+    print("---    Scanning for nearby Bluetooth devices    ---")
 
     scan = pexpect.spawn("bluetoothctl", encoding='utf-8', timeout=timeout)
+    scan.logfile = open("pexpect_debug.log","w")
     scan.expect("#")
     scan.sendline("power on")
     scan.expect("#")
@@ -19,6 +20,7 @@ def scan_bluetooth_devices(timeout=10):
     try:
         while time.time() - start < timeout:
             line = scan.readline().strip()
+            print(f'Line - {line}')
             match = re.search(r"\[NEW\] Device ([\w:]+) (.+)", line)
             if match:
                 mac, name = match.groups()
