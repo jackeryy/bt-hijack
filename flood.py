@@ -18,6 +18,8 @@ def flood_connect(mac, attempts=50, delay=0.5):
             flood.expect("#")
             flood.sendline(f"connect {mac}")
             flood.expect("#", timeout=3)
+            response = flood.before.strip()
+            print(response)
         except Exception as e:
             print(f"Attempt {i+1} failed: {e}")
         finally:

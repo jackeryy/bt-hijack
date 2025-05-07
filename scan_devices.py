@@ -48,7 +48,7 @@ def choose_device(devices):
     return list(devices.keys())[choice]
 
 if __name__ == "__main__":
-    devices = scan_bluetooth_devices(timeout=20)
+    devices = scan_bluetooth_devices(timeout=12)
     if not devices:
         print("No devices found.")
     else:
