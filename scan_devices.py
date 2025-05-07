@@ -2,6 +2,9 @@ import pexpect
 import time
 import re
 
+def strip_ansi(text):
+    return re.sub(r'\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])', '', text)
+
 def scan_bluetooth_devices(timeout=10):
     print("---    Scanning for nearby Bluetooth devices    ---")
 
@@ -20,12 +23,14 @@ def scan_bluetooth_devices(timeout=10):
     try:
         while time.time() - start < timeout:
             line = scan.readline().strip()
+            line = strip_ansi(line)
             print(f'Line - {repr(line)}')
             match = re.search(r"\[NEW\] Device ([\w:]+) (.+)", line)
             if match:
                 mac, name = match.groups()
-                found[mac] = name
-                print(f"{mac} - {name}")
+                if mac not in found:
+                    found[mac] = name
+                    print(f"{mac} - {name}")
     except pexpect.exceptions.TIMEOUT:
         pass
     finally:
@@ -36,7 +41,7 @@ def scan_bluetooth_devices(timeout=10):
 
 
 def choose_device(devices):
-    print("\n[*] Select a target device to attack:")
+    print("\n ----  Select a target device to attack  ----")
     for i, (mac, name) in enumerate(devices.items()):
         print(f"{i+1}. {mac} - {name}")
     choice = int(input("Enter number: ")) - 1
